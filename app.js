@@ -4,7 +4,10 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const DatabaseService = require('./services/databaseService.js');
 
+const userRoutes = require('./routes/userRoutes.js');
+app.use('/api', userRoutes);
 
 app.use((req, res) => {
     return res.status(404).json({
@@ -14,5 +17,6 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, async () => {
+    await DatabaseService.initializeDB();
     console.log('Server is running on port: ', PORT);
 });
