@@ -17,8 +17,7 @@ const initializeDB = async () => {
             id INTEGER PRIMARY KEY,
             role TEXT NOT NULL UNIQUE,
             description TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
 
         CREATE TABLE IF NOT EXISTS users (
@@ -30,23 +29,25 @@ const initializeDB = async () => {
             status INTEGER DEFAULT 1,  -- Storing boolean as INTEGER (0 or 1)
             last_login DATETIME NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (role) REFERENCES user_roles(id)
         );
 
-        INSERT IGNORE INTO user_roles (role, description) VALUES ('Admin', 'Administrator with full access');
-        INSERT IGNORE INTO user_roles (role, description) VALUES ('Legal', 'Legal team with limited access');
-        INSERT IGNORE INTO user_roles (role, description) VALUES ('PM', 'Product Manager with limited access');
-        INSERT IGNORE INTO user_roles (role, description) VALUES ('Sales', 'Sales team with limited access');
-        INSERT IGNORE INTO user_roles (role, description) VALUES ('HR', 'Human Resources with limited access');
-        INSERT IGNORE INTO user_roles (role, description) VALUES ('Support', 'Support team with limited access');
-        INSERT IGNORE INTO user_roles (role, description) VALUES ('Operations', 'Operations team with limited access');
+        -- Some sample roles
+        INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Admin', 'Administrator with full access');
+        INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Legal', 'Legal team with limited access');
+        INSERT OR IGNORE INTO user_roles (role, description) VALUES ('PM', 'Product Manager with limited access');
+        INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Sales', 'Sales team with limited access');
+        INSERT OR IGNORE INTO user_roles (role, description) VALUES ('HR', 'Human Resources with limited access');
+        INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Support', 'Support team with limited access');
+        INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Operations', 'Operations team with limited access');
 
-        INSERT IGNORE INTO users (email, password, name, role) VALUES ('admin@gmail.com, '', 'Administrator', (SELECT id FROM user_roles WHERE role = 'Admin'));
-        INSERT IGNORE INTO users (email, password, name, role) VALUES ('test@gmail.com', '', 'Test User', (SELECT id FROM user_roles WHERE role = 'Admin'));
-        INSERT IGNORE INTO users (email, password, name, role) VALUES ('legal_user@gmail.com', '', 'Legal User', (SELECT id FROM user_roles WHERE role = 'Legal'));
-        INSERT IGNORE INTO users (email, password, name, role) VALUES ('pm_user@gmail.com', '', 'Product Manager User', (SELECT id FROM user_roles WHERE role = 'PM'));
-        INSERT IGNORE INTO users (email, password, name, role) VALUES ('sales_manager@gmail.com', '', 'Sales Manager', (SELECT id FROM user_roles WHERE role = 'Sales'));
+        -- Some sample users with some assigned roles
+        -- Password for all sample users is same, i.e., password123. Stored as an bcrypt encrypted value
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('admin@gmail.com, '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Administrator', (SELECT id FROM user_roles WHERE role = 'Admin'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('test@gmail.com', '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Test User', (SELECT id FROM user_roles WHERE role = 'Admin'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('legal_user@gmail.com', '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Legal User', (SELECT id FROM user_roles WHERE role = 'Legal'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('pm_user@gmail.com', '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Product Manager User', (SELECT id FROM user_roles WHERE role = 'PM'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('sales_manager@gmail.com', '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Sales Manager', (SELECT id FROM user_roles WHERE role = 'Sales'));
     `);
 };
 
