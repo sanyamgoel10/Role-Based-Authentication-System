@@ -18,5 +18,6 @@ app.use((req, res) => {
 
 app.listen(PORT, async () => {
     await DatabaseService.initializeDB();
+    await DatabaseService.injectSampleUserData();
     console.log('Server is running on port: ', PORT);
 });
