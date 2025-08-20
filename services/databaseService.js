@@ -32,6 +32,7 @@ const initializeDB = async () => {
             FOREIGN KEY (role) REFERENCES user_roles(id)
         );
 
+        -- Inserting default roles
         INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Admin', 'Administrator with full access');
         INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Legal', 'Legal team with limited access');
         INSERT OR IGNORE INTO user_roles (role, description) VALUES ('PM', 'Product Manager with limited access');
@@ -40,11 +41,12 @@ const initializeDB = async () => {
         INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Support', 'Support team with limited access');
         INSERT OR IGNORE INTO user_roles (role, description) VALUES ('Operations', 'Operations team with limited access');
 
-        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('admin@gmail.com', '', 'Administrator', (SELECT id FROM user_roles WHERE role = 'Admin'));
-        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('test@gmail.com', '', 'Test User', (SELECT id FROM user_roles WHERE role = 'Admin'));
-        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('legal_user@gmail.com', '', 'Legal User', (SELECT id FROM user_roles WHERE role = 'Legal'));
-        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('pm_user@gmail.com', '', 'Product Manager User', (SELECT id FROM user_roles WHERE role = 'PM'));
-        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('sales_manager@gmail.com', '', 'Sales Manager', (SELECT id FROM user_roles WHERE role = 'Sales'));
+        -- Inserting default users with hashed passwords (Password is: 'test_password') encrypted using bcrypt with 12 rounds
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('admin@gmail.com', '$2a$12$5kQ/FhhK7XBgVWBRVG40.OJ3/lSxS3VyAWOHLTaGREQDUZwqwSFUC', 'Administrator', (SELECT id FROM user_roles WHERE role = 'Admin'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('test@gmail.com', '$2a$12$5kQ/FhhK7XBgVWBRVG40.OJ3/lSxS3VyAWOHLTaGREQDUZwqwSFUC', 'Test User', (SELECT id FROM user_roles WHERE role = 'Admin'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('legal_user@gmail.com', '$2a$12$5kQ/FhhK7XBgVWBRVG40.OJ3/lSxS3VyAWOHLTaGREQDUZwqwSFUC', 'Legal User', (SELECT id FROM user_roles WHERE role = 'Legal'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('pm_user@gmail.com', '$2a$12$5kQ/FhhK7XBgVWBRVG40.OJ3/lSxS3VyAWOHLTaGREQDUZwqwSFUC', 'Product Manager User', (SELECT id FROM user_roles WHERE role = 'PM'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('sales_manager@gmail.com', '$2a$12$5kQ/FhhK7XBgVWBRVG40.OJ3/lSxS3VyAWOHLTaGREQDUZwqwSFUC', 'Sales Manager', (SELECT id FROM user_roles WHERE role = 'Sales'));
     `);
 };
 
