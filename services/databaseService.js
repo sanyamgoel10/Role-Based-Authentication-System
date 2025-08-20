@@ -17,8 +17,7 @@ const initializeDB = async () => {
             id INTEGER PRIMARY KEY,
             role TEXT NOT NULL UNIQUE,
             description TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
 
         CREATE TABLE IF NOT EXISTS users (
@@ -30,7 +29,6 @@ const initializeDB = async () => {
             status INTEGER DEFAULT 1,  -- Storing boolean as INTEGER (0 or 1)
             last_login DATETIME NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (role) REFERENCES user_roles(id)
         );
 
