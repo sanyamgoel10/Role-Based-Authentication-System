@@ -42,12 +42,12 @@ const injectSampleUserData = async() => {
     `);
 }
 
-const getData = async (query, params) => {
+const getData = async (query, params = []) => {
     const db = await connectDB();
     return await db.all(query, params);
 }
 
-const setData = async (query, params) => {
+const setData = async (query, params = []) => {
     const db = await connectDB();
     const result = await db.run(query, params);
     return result.lastID;
