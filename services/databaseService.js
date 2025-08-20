@@ -43,7 +43,7 @@ const initializeDB = async () => {
 
         -- Some sample users with some assigned roles
         -- Password for all sample users is same, i.e., password123. Stored as an bcrypt encrypted value
-        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('admin@gmail.com, '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Administrator', (SELECT id FROM user_roles WHERE role = 'Admin'));
+        INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('admin@gmail.com', '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Administrator', (SELECT id FROM user_roles WHERE role = 'Admin'));
         INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('test@gmail.com', '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Test User', (SELECT id FROM user_roles WHERE role = 'Admin'));
         INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('legal_user@gmail.com', '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Legal User', (SELECT id FROM user_roles WHERE role = 'Legal'));
         INSERT OR IGNORE INTO users (email, password, name, role) VALUES ('pm_user@gmail.com', '$2a$12$b0UagQCPVsfhjybDpYC2xuwJ3jBKkycmihVBNo4MX6thOpTMrirQu', 'Product Manager User', (SELECT id FROM user_roles WHERE role = 'PM'));
