@@ -42,12 +42,7 @@ const injectSampleUserData = async() => {
     `);
 }
 
-const getRowData = async (query, params) => {
-    const db = await connectDB();
-    return await db.get(query, params);
-}
-
-const getAllData = async (query, params) => {
+const getData = async (query, params) => {
     const db = await connectDB();
     return await db.all(query, params);
 }
@@ -58,4 +53,4 @@ const setData = async (query, params) => {
     return result.lastID;
 }
 
-module.exports = { initializeDB, injectSampleUserData, getRowData, getAllData, setData };
+module.exports = { initializeDB, injectSampleUserData, getData, setData };
