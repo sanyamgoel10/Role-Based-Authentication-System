@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 
 const { BCRYPT_ENCRYPTION_ROUNDS } = require("../config/config.js");
 
-class EncryptionService {
+class PasswordService {
   async encryptPassword(password) {
     try {
       return await bcrypt.hash(password, BCRYPT_ENCRYPTION_ROUNDS);
@@ -22,4 +22,4 @@ class EncryptionService {
   }
 }
 
-module.exports = new EncryptionService();
+module.exports = new PasswordService();

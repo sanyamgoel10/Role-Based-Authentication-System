@@ -1,8 +1,8 @@
 const { VALID_USER_ROLES } = require('../config/config.js');
 const UtilService = require('../services/utilService.js');
 const DatabaseService = require('../services/databaseService.js');
-const AuthorizationService = require('../services/authorizationService.js');
-const AuthenticationService = require('../services/authenticationService.js');
+const PasswordService = require('../services/passwordService.js');
+const TokenService = require('../services/tokenService.js');
 
 class UserController {
   async register(req, res) {
@@ -51,11 +51,11 @@ class UserController {
         });
       }
 
-      let encryptedPassword = await AuthorizationService.encryptPassword(reqBody.password);
+      let encryptedPassword = await PasswordService.encryptPassword(reqBody.password);
 
       let insertData = await DatabaseService.setData(`insert into users (email, password, name, role) values (?, ?, ?, ?)`, [reqBody.email, encryptedPassword, reqBody.name, reqBody.role]);
 
-      let userJwtToken = await AuthenticationService.encodeJwtToken({
+      let userJwtToken = await TokenService.encodeJwtToken({
         email: reqBody.email,
         role: reqBody.role,
         userId: insertData,
@@ -117,7 +117,7 @@ class UserController {
       }
 
       let user = selectResp[0];
-      let isPasswordValid = await AuthorizationService.validatePassword(reqBody.password, user.password);
+      let isPasswordValid = await PasswordService.validatePassword(reqBody.password, user.password);
       if (!isPasswordValid) {
         return res.status(404).json({
           status: 0,
@@ -125,7 +125,7 @@ class UserController {
         });
       }
 
-      let userJwtToken = await AuthenticationService.encodeJwtToken({
+      let userJwtToken = await TokenService.encodeJwtToken({
         email: reqBody.email,
         role: user.role,
         userId: user.id,

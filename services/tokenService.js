@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY, JWT_EXPIRY } = require('../config/config.js');
 const UtilService = require('./utilService.js');
 
-class AuthenticationService {
+class TokenService {
   async encodeJwtToken(data) {
     try {
       return jwt.sign(data, JWT_SECRET_KEY, { expiresIn: JWT_EXPIRY });
@@ -27,4 +27,4 @@ class AuthenticationService {
   }
 }
 
-module.exports = new AuthenticationService();
+module.exports = new TokenService();
