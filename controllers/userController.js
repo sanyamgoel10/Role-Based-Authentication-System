@@ -51,7 +51,7 @@ class UserController {
 
       let encryptedPassword = await PasswordService.encryptPassword(reqBody.password);
 
-      let insertData = await DatabaseService.setData(`insert into users (email, password, name, role) values (?, ?, ?, ?)`, [reqBody.email, encryptedPassword, reqBody.name, reqBody.role]);
+      let insertData = await DatabaseService.setData(`insert into users (email, password, name, role, last_login) values (?, ?, ?, ?, datetime('now'))`, [reqBody.email, encryptedPassword, reqBody.name, reqBody.role]);
 
       let userJwtToken = await TokenService.encodeJwtToken({
         userId: insertData,
@@ -121,6 +121,8 @@ class UserController {
           msg: 'Incorrect password',
         });
       }
+
+      await DatabaseService.setData(`update users set last_login = datetime('now') where id = ?`, [user.id]);
 
       let userJwtToken = await TokenService.encodeJwtToken({
         userId: user.id,
