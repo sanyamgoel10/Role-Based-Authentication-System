@@ -222,6 +222,85 @@ class UserController {
       });
     }
   }
+
+  async updateUserProfile(req, res) {
+    try {
+      if (!UtilService.checkValidNumber(req.params.id)) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'Invalid params',
+        });
+      }
+      let userId = Number(req.params.id);
+
+      let findUser = await DatabaseService.getData(`select id, name, email, role from users where id = ?`, [userId]);
+      if (!UtilService.checkValidArray(findUser) || findUser.length != 1) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'userId not found',
+        });
+      }
+
+      let reqBody = req.body;
+      if (!UtilService.checkValidObject(reqBody)) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'Invalid body',
+        });
+      }
+
+      if (!UtilService.checkValidEmail(reqBody.email) && !UtilService.checkValidString(reqBody.name) && !UtilService.checkValidString(reqBody.role)) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'Invalid body params',
+        });
+      }
+
+      if (UtilService.checkValidString(reqBody.role) && !VALID_USER_ROLES.includes(reqBody.role)) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'Invalid role in body',
+        });
+      }
+
+      if (UtilService.checkValidEmail(reqBody.email)) {
+        let checkExistingEmail = await DatabaseService.getData(`select id from users where email = ? and id != ?`, [reqBody.email, userId]);
+        if (UtilService.checkValidArray(checkExistingEmail) && checkExistingEmail.length > 0) {
+          return res.status(404).json({
+            status: 0,
+            msg: 'email already present for other user',
+          });
+        }
+      }
+
+      if (UtilService.checkValidEmail(reqBody.email) && UtilService.checkValidString(reqBody.name) && UtilService.checkValidString(reqBody.role)) {
+        await DatabaseService.setData(`update users set email = ?, name = ?, role = ? where id = ?`, [reqBody.email, reqBody.name, reqBody.role, userId]);
+      } else if (UtilService.checkValidEmail(reqBody.email) && UtilService.checkValidString(reqBody.name)) {
+        await DatabaseService.setData(`update users set email = ?, name = ? where id = ?`, [reqBody.email, reqBody.name, userId]);
+      } else if (UtilService.checkValidString(reqBody.name) && UtilService.checkValidString(reqBody.role)) {
+        await DatabaseService.setData(`update users set name = ?, role = ? where id = ?`, [reqBody.name, reqBody.role, userId]);
+      } else if (UtilService.checkValidEmail(reqBody.email) && UtilService.checkValidString(reqBody.role)) {
+        await DatabaseService.setData(`update users set email = ?, role = ? where id = ?`, [reqBody.email, reqBody.role, userId]);
+      } else if (UtilService.checkValidEmail(reqBody.email)) {
+        await DatabaseService.setData(`update users set email = ? where id = ?`, [reqBody.email, userId]);
+      } else if (UtilService.checkValidString(reqBody.name)) {
+        await DatabaseService.setData(`update users set name = ? where id = ?`, [reqBody.name, userId]);
+      } else if (UtilService.checkValidString(reqBody.role)) {
+        await DatabaseService.setData(`update users set role = ? where id = ?`, [reqBody.role, userId]);
+      }
+
+      return res.status(200).json({
+        status: 1,
+        msg: 'Profile updated successfully',
+      });
+    } catch (error) {
+      console.log("Error: ", error);
+      return res.status(500).json({
+        status: 0,
+        msg: 'Internal server error',
+      });
+    }
+  }
 }
 
 module.exports = new UserController();

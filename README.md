@@ -140,7 +140,7 @@ To get this project up and running on your local machine, follow these steps:
   * **`GET /api/admin/users`**
 
       * **Description:** Admin only API to list all users and their profile
-      * **Authentication:** Requires a valid JWT while register/login in the `Authorization` header (`Bearer <token>`).
+      * **Authentication:** Requires a valid JWT generated while register/login in the `Authorization` header (`Bearer <token>`).
       * **Response:**
         ```json
         {
@@ -186,6 +186,26 @@ To get this project up and running on your local machine, follow these steps:
             ]
         }
         ```
+    
+  * **`PUT /api/admin/updateUserProfile/:id`**
+      * **Description:** Admin only API to edit any user profile
+      * **Authentication:** Requires a valid JWT generated while register/login in the `Authorization` header (`Bearer <token>`).
+      * **Request Body:**
+        ```json
+        {
+            "email": "sango@gmail.com",
+            "name": "Legal",
+            "role": "Admin"
+        }
+        ```
+        All the params in body are optional. Any field can be updated.
+      * **Response:**
+        ```json
+        {
+            "status": 1,
+            "msg": "Profile updated successfully"
+        }
+        ```
 ---
 
 ## Roles
@@ -207,7 +227,7 @@ Some of the users data has been pre-seeded in the database using some insert que
 | PM | pm_user@gmail.com | password123 |
 | Sales | sales_manager@gmail.com | password123 |
 
---
+---
 
 ## Design Decision & Assumptions
   * Used SQLite for easy local setup (lightweight & file-based DB). Can be swapped with PostgreSQL/MySQL by changinf config.
