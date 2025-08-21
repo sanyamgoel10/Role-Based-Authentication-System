@@ -41,8 +41,6 @@ class UserController {
         });
       }
 
-      console.log("reqBody: ", reqBody);
-
       let selectResp = await DatabaseService.getData(`select id from users where email = ?`, [reqBody.email]);
       if (!UtilService.checkValidArray(selectResp) || selectResp.length > 0) {
         return res.status(404).json({
