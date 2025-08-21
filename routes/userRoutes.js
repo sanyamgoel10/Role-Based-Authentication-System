@@ -8,6 +8,6 @@ const UserController = require('../controllers/userController.js');
 router.post('/register', UserController.register);
 router.post('/login', UserController.login);
 router.get('/profile', AuthMiddleware.validateJwtToken, UserController.getProfile);
-// router.get('/admin/users');
+router.get('/admin/users', AuthMiddleware.validateJwtToken, UserController.getUsers);
 
 module.exports = router;

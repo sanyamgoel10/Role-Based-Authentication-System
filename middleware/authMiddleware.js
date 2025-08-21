@@ -30,6 +30,7 @@ class AuthMiddleware {
 
       req.UserJwtData = {
         userId: jwtData.userId,
+        role: jwtData.role,
       }
 
       next();

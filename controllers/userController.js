@@ -57,6 +57,7 @@ class UserController {
 
       let userJwtToken = await TokenService.encodeJwtToken({
         userId: insertData,
+        role: reqBody.role,
         time: Date()
       });
       if (!userJwtToken) {
@@ -125,6 +126,7 @@ class UserController {
 
       let userJwtToken = await TokenService.encodeJwtToken({
         userId: user.id,
+        role: user.role,
         time: Date()
       });
       if (!userJwtToken) {
@@ -172,6 +174,45 @@ class UserController {
         status: 1,
         msg: 'User profile fetched successfully',
         data: selectResp[0]
+      });
+    } catch (error) {
+      console.log("Error: ", error);
+      return res.status(500).json({
+        status: 0,
+        msg: 'Internal server error',
+      });
+    }
+  }
+
+  async getUsers(req, res) {
+    try {
+      if (!UtilService.checkValidObject(req.UserJwtData) || !UtilService.checkValidNumber(req.UserJwtData.userId) || !UtilService.checkValidString(req.UserJwtData.role)) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'Invalid authorization data',
+        });
+      }
+      req.UserJwtData.userId = Number(req.UserJwtData.userId);
+
+      if (req.UserJwtData.role != 'Admin') {
+        return res.status(404).json({
+          status: 0,
+          msg: 'Unauthorised user -> API only accessible to Admin',
+        });
+      }
+
+      let usersData = await DatabaseService.getData(`select id as userId, email, name, role from users`);
+      if (!UtilService.checkValidArray(usersData) || usersData.length == 0) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'No users found',
+        });
+      }
+
+      return res.status(200).json({
+        status: 1,
+        msg: 'All users data fetched successfully',
+        data: usersData
       });
     } catch (error) {
       console.log("Error: ", error);
