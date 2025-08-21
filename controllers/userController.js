@@ -153,6 +153,23 @@ class UserController {
       });
     }
   }
+
+  async getProfile(req, res) {
+    try{
+      console.log("req.UserJwtData: ", req.UserJwtData);
+      
+      return res.status(200).json({
+        status: 1,
+        msg: 'User profile fetched successfully'
+      });
+    }catch(error){
+      console.log("Error: ", error);
+      return res.status(500).json({
+        status: 0,
+        msg: 'Internal server error',
+      });
+    }
+  }
 }
 
 module.exports = new UserController();
