@@ -14,6 +14,10 @@ class UtilService{
     checkValidArray(inpVal){
         return 'object' == typeof inpVal && inpVal != null && Array.isArray(inpVal);
     }
+
+    checkValidNumber(inpVal){
+        return 'undefined' != typeof inpVal && inpVal != null && (/^\d+$/).test(inpVal);
+    }
 }
 
 module.exports = new UtilService();

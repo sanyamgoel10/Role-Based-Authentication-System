@@ -56,8 +56,6 @@ class UserController {
       let insertData = await DatabaseService.setData(`insert into users (email, password, name, role) values (?, ?, ?, ?)`, [reqBody.email, encryptedPassword, reqBody.name, reqBody.role]);
 
       let userJwtToken = await TokenService.encodeJwtToken({
-        email: reqBody.email,
-        role: reqBody.role,
         userId: insertData,
         time: Date()
       });
@@ -126,8 +124,6 @@ class UserController {
       }
 
       let userJwtToken = await TokenService.encodeJwtToken({
-        email: reqBody.email,
-        role: user.role,
         userId: user.id,
         time: Date()
       });
@@ -155,14 +151,29 @@ class UserController {
   }
 
   async getProfile(req, res) {
-    try{
-      console.log("req.UserJwtData: ", req.UserJwtData);
-      
+    try {
+      if (!UtilService.checkValidObject(req.UserJwtData) || !UtilService.checkValidNumber(req.UserJwtData.userId)) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'Invalid authorization data',
+        });
+      }
+      req.UserJwtData.userId = Number(req.UserJwtData.userId);
+
+      let selectResp = await DatabaseService.getData(`select id as userId, email, name, role from users where id = ?`, [req.UserJwtData.userId]);
+      if (!UtilService.checkValidArray(selectResp) || selectResp.length == 0 || !UtilService.checkValidObject(selectResp[0])) {
+        return res.status(404).json({
+          status: 0,
+          msg: 'User not found',
+        });
+      }
+
       return res.status(200).json({
         status: 1,
-        msg: 'User profile fetched successfully'
+        msg: 'User profile fetched successfully',
+        data: selectResp[0]
       });
-    }catch(error){
+    } catch (error) {
       console.log("Error: ", error);
       return res.status(500).json({
         status: 0,

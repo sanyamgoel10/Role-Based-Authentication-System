@@ -24,13 +24,11 @@ class AuthMiddleware {
       if (!jwtData) {
         return res.status(401).json({
           status: 0,
-          msg: "Access Denied -> Invalid Bearer token"
+          msg: "Access Denied -> Invalid or Expired Bearer token"
         });
       }
 
       req.UserJwtData = {
-        email: jwtData.email,
-        role: jwtData.role,
         userId: jwtData.userId,
       }
 
